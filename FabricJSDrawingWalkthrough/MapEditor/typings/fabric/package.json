@@ -1,0 +1,74 @@
+{
+    "name": "@types/fabric",
+    "version": "3.5.1",
+    "description": "TypeScript definitions for FabricJS",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Oliver Klemencic",
+            "url": "https://github.com/oklemencic",
+            "githubUsername": "oklemencic"
+        },
+        {
+            "name": "Joseph Livecchi",
+            "url": "https://github.com/joewashear007",
+            "githubUsername": "joewashear007"
+        },
+        {
+            "name": "Michael Randolph",
+            "url": "https://github.com/mrand01",
+            "githubUsername": "mrand01"
+        },
+        {
+            "name": "Tiger Oakes",
+            "url": "https://github.com/NotWoods",
+            "githubUsername": "NotWoods"
+        },
+        {
+            "name": "Brian Martinson",
+            "url": "https://github.com/bmartinson",
+            "githubUsername": "bmartinson"
+        },
+        {
+            "name": "Rogerio Teixeira",
+            "url": "https://github.com/RogerioTeixeira",
+            "githubUsername": "RogerioTeixeira"
+        },
+        {
+            "name": "Bradley Hill",
+            "url": "https://github.com/BradleyHill",
+            "githubUsername": "BradleyHill"
+        },
+        {
+            "name": "Bryan Krol",
+            "url": "https://github.com/bmkrol823",
+            "githubUsername": "bmkrol823"
+        },
+        {
+            "name": "Glenn Gartner",
+            "url": "https://github.com/glenngartner",
+            "githubUsername": "glenngartner"
+        },
+        {
+            "name": "Codertx",
+            "url": "https://github.com/codertx",
+            "githubUsername": "codertx"
+        },
+        {
+            "name": "Mike Moore",
+            "url": "https://github.com/mike667",
+            "githubUsername": "mike667"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/fabric"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "5ea947f8ab91feb86224db09b9c224cc61a0e1e78ba4724b4b62929df3c41f1d",
+    "typeScriptVersion": "2.8"
+}

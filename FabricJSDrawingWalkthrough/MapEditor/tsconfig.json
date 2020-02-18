@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "skipDefaultLibCheck": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "outFile": "../wwwroot/js/mapEditor.js",
+    "target": "es2015",
+    "allowJs": true,
+    "lib": ["es2015", "dom", "dom.Iterable"]
+  },
+  "compileOnSave": true,
+  "include": [
+    "*",
+    "Drawers/IObjectDrawer.ts",
+    "Drawers/LineDrawer.ts",
+    "Drawers/ImageDrawer.ts",
+    "Drawers/RectangleDrawer.ts",
+    "Drawers/TextDrawer.ts",
+    "Drawers/OvalDrawer.ts",
+    "Drawers/PathDrawer.ts",
+    "Drawers/PolylineDrawer.ts",
+    "Components/Base/ImageDropdown.ts",
+    "Components/Base/ControlComponent.ts",
+    "Components/Base/DrawingComponent.ts",
+    "Components/Base/ImageOption.ts",
+    "Components/Base/ImageDropdownOptions.ts",
+    "Components/Tools/ColorChooserComponent.ts",
+    "Components/Tools/CurvyLineComponent.ts",
+    "Components/Tools/LineComponent.ts",
+    "Components/Tools/LineThicknessComponent.ts",
+    "Components/Tools/LineTypeComponent.ts",
+    "Components/Tools/OvalComponent.ts",
+    "Components/Tools/PolylineComponent.ts",
+    "Components/Tools/RectComponent.ts",
+    "Components/Tools/RedoComponent.ts",
+    "Components/Tools/UndoComponent.ts",
+    "Components/Tools/TextComponent.ts",
+    "typings/fabric/index.d.ts",
+    "typings/jquery/jquery.d.ts",
+    "Enums/CursorMode.ts",
+    "Enums/DrawingMode.ts",
+    "Enums/ImageDropdownStyle.ts",
+    "Object.ts",
+    "Objects/CurvyLine.ts",
+    "Utilities.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "paths": {
+    "*": [ "*" ]
+  }
+}

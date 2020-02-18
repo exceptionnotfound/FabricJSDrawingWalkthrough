@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "jquery@3.0.0",
+      "destination": "wwwroot/lib/jquery"
+    },
+    {
+      "library": "fabric.js@3.5.0",
+      "destination": "wwwroot/lib/fabric.js"
+    },
+    {
+      "provider": "unpkg",
+      "library": "definitely-typed-jquery@1.0.0",
+      "destination": "MapEditor/typings/jquery/",
+      "files": [
+        "jquery.d.ts"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@types/fabric@3.5.1",
+      "destination": "MapEditor/typings/fabric"
+    }
+  ]
+}

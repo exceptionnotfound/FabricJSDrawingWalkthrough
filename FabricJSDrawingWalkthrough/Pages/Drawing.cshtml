@@ -1,0 +1,31 @@
+﻿@page
+@model FabricJSDrawingWalkthrough.DrawingModel
+@{
+    ViewData["Title"] = "Drawing";
+}
+
+<h1>Make a Drawing!</h1>
+
+<div class="row editorContainer">
+    <div class="CanvasContainer">
+        <div id="canvas"></div>
+    </div>
+</div>
+<div class="row notificationBar noPrint">
+    <div class="col">
+        <div id="StatusBar" class="float-right"></div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/fabric.js/fabric.min.js"></script>
+    <script src="~/js/mapEditor.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            var canvasHeight = (window.innerHeight - $('#canvas').offset().top) * .9;
+            var canvasWidth = $('#canvas').width();
+
+            drawer = new MapEditor('canvas', canvasHeight, canvasWidth);
+        });
+    </script>
+}
