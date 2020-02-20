@@ -1,86 +1,107 @@
-﻿//The below code (and all of DrawingEditor) was 
-//originally developed by my teammate Christopher Jestice (https://www.linkedin.com/in/christopher-jestice)
+﻿//The below code (and all of DrawingEditor) was originally developed 
+//by my teammate Christopher Jestice (https://www.linkedin.com/in/christopher-jestice)
 //Refinements are by me, Matthew Jones (https://exceptionnotfound.net).
 
 class DrawingEditor {
     canvas: fabric.Canvas;
 
-    //private _drawer: IObjectDrawer;
-    //readonly drawerOptions: fabric.IObjectOptions;
-    //private readonly drawers: IObjectDrawer[];
-    //private isDown: boolean;
-    //private isObjectSelected: boolean = false;
-    //private object: fabric.Object;
+    private cursorMode: CursorMode;
+    private _drawer: IObjectDrawer;
+    readonly drawerOptions: fabric.IObjectOptions;
+    private readonly drawers: IObjectDrawer[];
+    private isDown: boolean;
+    private isObjectSelected: boolean = false;
+    private object: fabric.Object;
 
-    constructor(private readonly selector: string, canvasHeight: number, canvasWidth: number) {
+    constructor(private readonly selector: string,
+        canvasHeight: number, canvasWidth: number) {
         $(`#${selector}`).replaceWith(`<canvas id="${selector}" height=${canvasHeight} width=${canvasWidth}> </canvas>`);
+
+        this.cursorMode = CursorMode.Draw;
+
         this.canvas = new fabric.Canvas(`${selector}`, { selection: false });
 
-        //this.drawers = [
-        //    new LineDrawer(),
-        //];
-        //this._drawer = this.drawers[DrawingMode.Line];
-        //this.isDown = false;
-        //this.drawerOptions = {
-        //    stroke: 'black',
-        //    strokeWidth: 1,
-        //    selectable: true,
-        //    strokeUniform: true
-        //};
+        this.drawers = [
+            new LineDrawer(),
+        ];
+        this._drawer = this.drawers[DrawingMode.Line];
+        this.drawerOptions = {
+            stroke: 'black',
+            strokeWidth: 1,
+            selectable: true,
+            strokeUniform: true
+        };
 
-        //this.initializeCanvasEvents();
+        this.isDown = false;
+
+        this.initializeCanvasEvents();
     }
 
-    //private initializeCanvasEvents() {
-    //    this.canvas.on('mouse:down', (o) => {
-    //        const e = <MouseEvent>o.e;
+    private initializeCanvasEvents() {
+        this.canvas.on('mouse:down', (o) => {
+            const e = <MouseEvent>o.e;
 
-    //        const pointer = this.canvas.getPointer(o.e);
-    //        this.mouseDown(pointer.x, pointer.y);
-    //    });
+            const pointer = this.canvas.getPointer(o.e);
+            this.mouseDown(pointer.x, pointer.y);
+            this.isObjectSelected = this.canvas.getActiveObject() !== null;
+        });
 
-    //    this.canvas.on('mouse:move', (o) => {
-    //        const pointer = this.canvas.getPointer(o.e);
-    //        this.mouseMove(pointer.x, pointer.y);
-    //    });
+        this.canvas.on('mouse:move', (o) => {
+            const pointer = this.canvas.getPointer(o.e);
+            this.mouseMove(pointer.x, pointer.y);
+        });
 
-    //    this.canvas.on('mouse:over', (o) => {
-    //        if (this.isDown || this.isObjectSelected || o.target === null) { return; }
+        this.canvas.on('mouse:over', (o) => {
+            if (this.isDown || this.isObjectSelected || o.target === null) { return; }
 
-    //        if (o.target != null && o.target.selectable) {
-    //            this.canvas.setActiveObject(o.target);
-    //            this.canvas.renderAll();
-    //        }
-    //    });
+            if (o.target != null && o.target.selectable) {
+                this.canvas.setActiveObject(o.target);
+                this.canvas.renderAll();
+            }
+        });
 
-    //    this.canvas.on('mouse:out', (o) => {
-    //        if (this.isObjectSelected) { return; }
+        this.canvas.on('mouse:out', (o) => {
+            if (this.isObjectSelected) { return; }
 
-    //        this.canvas.discardActiveObject().renderAll();
-    //    });
+            this.canvas.discardActiveObject().renderAll();
+        });
 
-    //    this.canvas.on('mouse:up', (o) => {
-    //        this.isDown = false;
-    //    });
-    //}
+        this.canvas.on('mouse:up', (o) => {
+            this.isDown = false;
+        });
 
-    //private async make(x: number, y: number): Promise<fabric.Object> {
-    //    return await this._drawer.make(x, y, this.drawerOptions);
-    //}
+        this.canvas.on('object:selected', (o) => {
+            this.cursorMode = CursorMode.Select;
+            //sets currently selected object
+            this.object = o.target;
+        });
 
-    //private mouseMove(x: number, y: number): any {
-    //    if (!this.isDown) {
-    //        return;
-    //    }
-    //    this._drawer.resize(this.object, x, y);
-    //    this.canvas.renderAll();
-    //}  
+        this.canvas.on('selection:cleared', (o) => {
+            this.cursorMode = CursorMode.Draw;
+        });
+    }
 
-    //private async mouseDown(x: number, y: number): Promise<any> {
-    //    this.isDown = true;
+    private async make(x: number, y: number): Promise<fabric.Object> {
+        return await this._drawer.make(x, y, this.drawerOptions);
+    }
 
-    //    this.object = await this.make(x, y);
-    //    this.canvas.add(this.object);
-    //    this.canvas.renderAll();
-    //}
+    private mouseMove(x: number, y: number): any {
+        if (!(this.cursorMode.valueOf() === CursorMode.Draw.valueOf() && this.isDown)) {
+            return;
+        }
+        this._drawer.resize(this.object, x, y);
+        this.canvas.renderAll();
+    }  
+
+    private async mouseDown(x: number, y: number): Promise<any> {
+        this.isDown = true;
+
+        if (this.cursorMode !== CursorMode.Draw) {
+            return;
+        }
+
+        this.object = await this.make(x, y);
+        this.canvas.add(this.object);
+        this.canvas.renderAll();
+    }
 }
