@@ -1,6 +1,6 @@
 ﻿//The below code (and all of DrawingEditor) was 
-//originally developed by my teammate Christopher Jestice.
-//Refinements are by me, Matthew Jones (Exception Not Found).
+//originally developed by my teammate Christopher Jestice (https://www.linkedin.com/in/christopher-jestice)
+//Refinements are by me, Matthew Jones (https://exceptionnotfound.net).
 
 class DrawingEditor {
     canvas: fabric.Canvas;
