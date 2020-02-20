@@ -5,6 +5,7 @@
 class DrawingEditor {
     canvas: fabric.Canvas;
 
+    private components: DisplayComponent[];
     private cursorMode: CursorMode;
     private _drawer: IObjectDrawer;
     readonly drawerOptions: fabric.IObjectOptions;
@@ -36,6 +37,11 @@ class DrawingEditor {
 
         this.initializeCanvasEvents();
     }
+
+    //Properties
+    get drawingMode() { return this._drawer.drawingMode; }
+
+    set drawingMode(value: DrawingMode) { this._drawer = this.drawers[value]; }
 
     private initializeCanvasEvents() {
         this.canvas.on('mouse:down', (o) => {
@@ -103,5 +109,36 @@ class DrawingEditor {
         this.object = await this.make(x, y);
         this.canvas.add(this.object);
         this.canvas.renderAll();
+    }
+
+    addComponents(componentList: [{ id: string, type: string }]) {
+        componentList.forEach((item) => {
+            this.addComponent(item.id, item.type);
+        });
+    }
+
+    addComponent(target: string, component: string) {
+        switch (component) {
+            case 'line':
+                this.components[component] = [new LineDisplayComponent(target, this)];
+                break;
+        }
+    }
+
+    componentSelected(componentName: string) {
+        this.canvas.discardActiveObject();
+        for (var key in this.components) {
+            if (!this.components.hasOwnProperty(key)) continue;
+
+            const obj = this.components[key];
+
+            if (obj[0].target === componentName) {
+                this.drawingMode = obj[0].drawingMode;
+            }
+
+            //Not all types have a selectedChanged event
+            if (obj[0].selectedChanged !== undefined)
+                obj[0].selectedChanged(componentName);
+        }
     }
 }

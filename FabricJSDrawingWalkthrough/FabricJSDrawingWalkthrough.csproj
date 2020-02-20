@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DrawingEditor\Components\DisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\LineDisplayComponent.ts" />
     <None Remove="DrawingEditor\Enums\CursorMode.ts" />
   </ItemGroup>
 

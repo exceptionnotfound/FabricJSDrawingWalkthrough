@@ -30,6 +30,9 @@ class DrawingEditor {
         this.isDown = false;
         this.initializeCanvasEvents();
     }
+    //Properties
+    get drawingMode() { return this._drawer.drawingMode; }
+    set drawingMode(value) { this._drawer = this.drawers[value]; }
     initializeCanvasEvents() {
         this.canvas.on('mouse:down', (o) => {
             const e = o.e;
@@ -91,6 +94,32 @@ class DrawingEditor {
             this.canvas.renderAll();
         });
     }
+    addComponents(componentList) {
+        componentList.forEach((item) => {
+            this.addComponent(item.id, item.type);
+        });
+    }
+    addComponent(target, component) {
+        switch (component) {
+            case 'line':
+                this.components[component] = [new LineDisplayComponent(target, this)];
+                break;
+        }
+    }
+    componentSelected(componentName) {
+        this.canvas.discardActiveObject();
+        for (var key in this.components) {
+            if (!this.components.hasOwnProperty(key))
+                continue;
+            const obj = this.components[key];
+            if (obj[0].target === componentName) {
+                this.drawingMode = obj[0].drawingMode;
+            }
+            //Not all types have a selectedChanged event
+            if (obj[0].selectedChanged !== undefined)
+                obj[0].selectedChanged(componentName);
+        }
+    }
 }
 class LineDrawer {
     constructor() {
@@ -109,5 +138,55 @@ class LineDrawer {
         return new Promise(resolve => {
             resolve(object);
         });
+    }
+}
+class DisplayComponent {
+    constructor(mode, selector, parent, options) {
+        this.drawingMode = mode;
+        this.target = selector;
+        this.hoverText = options.altText;
+        this.svg = options.svg;
+        this.canvasDrawer = parent;
+        this.render();
+        this.attachEvents();
+    }
+    //This method replaces the target HTML with the component's HTML.
+    render() {
+        const html = `<label id="${this.target.replace('#', '')}" 
+                      class="btn btn-primary text-light" title="${this.hoverText}">
+                        <input type="radio" name="options" autocomplete="off">
+                        ${this.svg}
+                      </label>`;
+        $(this.target).replaceWith(html);
+    }
+    //This method attaches the componentSelected event in DrawingEditor
+    attachEvents() {
+        const data = {
+            mode: this.drawingMode,
+            container: this.canvasDrawer,
+            target: this.target
+        };
+        // This long jQuery method chain is 
+        // looking for the <input type="radio">
+        // from the render() method.
+        $(this.target).children().first().click(data, function () {
+            data.container.drawingMode = data.mode;
+            data.container.componentSelected(data.target);
+        });
+    }
+    selectedChanged(componentName) { }
+}
+class DisplayComponentOptions {
+}
+class LineDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Line',
+            svg: `<svg width="13px" height="15px" viewBox="2 0 13 17">
+                    <line x1="0" y1="13" x2="13" y2="0" stroke="white" stroke-width="2px" />
+                  </svg>`
+        });
+        super(0 /* Line */, target, parent, options);
     }
 }

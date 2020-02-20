@@ -6,6 +6,21 @@
 
 <h1>Make a Drawing!</h1>
 
+<div class="row bg-secondary text-light">
+    <div class="col-sm-11">
+        <div class="row col-12">
+            <div class="row drawingToolbar">
+                <label class="col-form-label controlLabel">Tools:</label>
+                <div class="d-inline-block">
+                    <div class="btn-group btn-group-toggle" role="group" data-toggle="buttons" aria-label="Drawing Components">
+                        <div id="lineDisplayComponent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row editorContainer">
     <div class="CanvasContainer">
         <div id="canvas"></div>
@@ -29,6 +44,15 @@
             //Instantiate our new drawer
             //The canvas is created inside this constructor, using the selector passed.
             var editor = new DrawingEditor('canvas', canvasHeight, canvasWidth);
+
+            //Create a list of available display components
+            const components = [
+                { id: '#lineDisplayComponent', type: 'line' }
+            ];
+
+            //Add the components to the DrawingEditor, which will render them.
+            editor.addComponents(components);
+            $('#lineDisplayComponent').click();
         });
     </script>
 }

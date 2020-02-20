@@ -18,7 +18,7 @@
     {
       "provider": "unpkg",
       "library": "definitely-typed-jquery@1.0.0",
-      "destination": "MapEditor/typings/jquery/",
+      "destination": "DrawingEditor/typings/jquery/",
       "files": [
         "jquery.d.ts"
       ]
@@ -26,7 +26,7 @@
     {
       "provider": "unpkg",
       "library": "@types/fabric@3.5.1",
-      "destination": "MapEditor/typings/fabric"
+      "destination": "DrawingEditor/typings/fabric"
     }
   ]
 }
