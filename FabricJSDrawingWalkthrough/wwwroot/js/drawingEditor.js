@@ -1,3 +1,6 @@
+//The below code (and all of DrawingEditor) was 
+//originally developed by my teammate Christopher Jestice.
+//Refinements are by me, Matthew Jones (Exception Not Found).
 class DrawingEditor {
     //private _drawer: IObjectDrawer;
     //readonly drawerOptions: fabric.IObjectOptions;

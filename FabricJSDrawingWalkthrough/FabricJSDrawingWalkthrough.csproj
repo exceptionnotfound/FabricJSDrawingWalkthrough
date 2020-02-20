@@ -5,14 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="compilerconfig.json" />
+    <Compile Remove="MapEditor\**" />
+    <Content Remove="MapEditor\**" />
+    <EmbeddedResource Remove="MapEditor\**" />
+    <None Remove="MapEditor\**" />
+    <TypeScriptCompile Remove="MapEditor\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="MapEditor\Components\DrawingComponent.ts" />
-    <None Remove="MapEditor\Drawers\IObjectDrawer.ts" />
-    <None Remove="MapEditor\Drawers\LineDrawer.ts" />
-    <None Remove="MapEditor\Enums\DrawingMode.ts" />
+    <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +30,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MapEditor\Components\" />
   </ItemGroup>
 
 

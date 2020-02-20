@@ -19,13 +19,16 @@
 
 @section Scripts{
     <script src="~/lib/fabric.js/fabric.min.js"></script>
-    <script src="~/js/mapEditor.js" asp-append-version="true"></script>
+    <script src="~/js/drawingEditor.js" asp-append-version="true"></script>
     <script>
         $(function () {
+            //Calculate canvas height as a function of the window size.
             var canvasHeight = (window.innerHeight - $('#canvas').offset().top) * .9;
             var canvasWidth = $('#canvas').width();
 
-            drawer = new MapEditor('canvas', canvasHeight, canvasWidth);
+            //Instantiate our new drawer
+            //The canvas is created inside this constructor, using the selector passed.
+            var editor = new DrawingEditor('canvas', canvasHeight, canvasWidth);
         });
     </script>
 }

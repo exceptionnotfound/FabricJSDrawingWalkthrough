@@ -5,7 +5,7 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": false,
-    "outFile": "../wwwroot/js/mapEditor.js",
+    "outFile": "../wwwroot/js/drawingEditor.js",
     "target": "es2015",
     "allowJs": true,
     "lib": ["es2015", "dom", "dom.Iterable"]
