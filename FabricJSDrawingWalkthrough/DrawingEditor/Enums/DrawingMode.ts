@@ -2,6 +2,7 @@
     Line,
     Rectangle,
     Oval,
+    Triangle,
     Text,
     Path,
     Polyline

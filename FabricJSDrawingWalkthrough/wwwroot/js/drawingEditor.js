@@ -20,7 +20,9 @@ class DrawingEditor {
         this.components = [];
         this.drawers = [
             new LineDrawer(),
-            new RectangleDrawer()
+            new RectangleDrawer(),
+            new OvalDrawer(),
+            new TriangleDrawer()
         ];
         this._drawer = this.drawers[0 /* Line */];
         this.drawerOptions = {
@@ -109,6 +111,12 @@ class DrawingEditor {
             case 'rect':
                 this.components[component] = [new RectangleDisplayComponent(target, this)];
                 break;
+            case 'oval':
+                this.components[component] = [new OvalDisplayComponent(target, this)];
+                break;
+            case 'tria':
+                this.components[component] = [new TriangleDisplayComponent(target, this)];
+                break;
         }
     }
     componentSelected(componentName) {
@@ -168,6 +176,52 @@ class RectangleDrawer {
         });
     }
 }
+class OvalDrawer {
+    constructor() {
+        this.drawingMode = 2 /* Oval */;
+    }
+    make(x, y, options, rx, ry) {
+        this.origX = x;
+        this.origY = y;
+        return new Promise(resolve => {
+            resolve(new fabric.Ellipse(Object.assign({ left: x, top: y, rx: rx, ry: ry, fill: 'transparent' }, options)));
+        });
+    }
+    resize(object, x, y) {
+        object.set({
+            originX: this.origX > x ? 'right' : 'left',
+            originY: this.origY > y ? 'bottom' : 'top',
+            rx: Math.abs(x - object.left) / 2,
+            ry: Math.abs(y - object.top) / 2
+        }).setCoords();
+        return new Promise(resolve => {
+            resolve(object);
+        });
+    }
+}
+class TriangleDrawer {
+    constructor() {
+        this.drawingMode = 3 /* Triangle */;
+    }
+    make(x, y, options, width, height) {
+        this.origX = x;
+        this.origY = y;
+        return new Promise(resolve => {
+            resolve(new fabric.Triangle(Object.assign({ left: x, top: y, width: width, height: height, fill: 'transparent' }, options)));
+        });
+    }
+    resize(object, x, y) {
+        object.set({
+            originX: this.origX > x ? 'right' : 'left',
+            originY: this.origY > y ? 'bottom' : 'top',
+            width: Math.abs(this.origX - x),
+            height: Math.abs(this.origY - y),
+        }).setCoords();
+        return new Promise(resolve => {
+            resolve(object);
+        });
+    }
+}
 class DisplayComponent {
     constructor(mode, selector, parent, options) {
         this.drawingMode = mode;
@@ -181,6 +235,7 @@ class DisplayComponent {
         this.attachEvents();
     }
     //This method replaces the target HTML with the component's HTML.
+    //The radio button is included to have Bootstrap use the correct styles.
     render() {
         const html = `<label id="${this.target.replace('#', '')}" class="btn btn-primary text-light " title="${this.hoverText}">
                         <input type="radio" name="options" autocomplete="off"> ${this.iconStr()}
@@ -202,11 +257,8 @@ class DisplayComponent {
             container: this.canvasDrawer,
             target: this.target
         };
-        // This long jQuery method chain is 
-        // looking for the <input type="radio">
-        // from the render() method.
+        //When clicking the <label>, fire this event.
         $(this.target).click(data, function () {
-            console.log("Click event fired!");
             data.container.drawingMode = data.mode;
             data.container.componentSelected(data.target);
         });
@@ -236,5 +288,30 @@ class RectangleDisplayComponent extends DisplayComponent {
             childName: null
         });
         super(1 /* Rectangle */, target, parent, options);
+    }
+}
+class OvalDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Oval',
+            classNames: 'fa fa-circle-o',
+            childName: null
+        });
+        super(2 /* Oval */, target, parent, options);
+    }
+}
+class TriangleDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Triangle',
+            svg: `<svg width="13px" height="15px" viewBox="0 0 20 20">
+                    <line x1="0" y1="20" x2="10" y2="0" stroke="white" stroke-width="2px" />
+                    <line x1="10" y1="0" x2="20" y2="20" stroke="white" stroke-width="2px" />
+                    <line x1="0" y1="20" x2="20" y2="20" stroke="white" stroke-width="2px" />
+                  </svg>`,
+        });
+        super(3 /* Triangle */, target, parent, options);
     }
 }

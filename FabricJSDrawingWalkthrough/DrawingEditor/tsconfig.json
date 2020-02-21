@@ -18,9 +18,13 @@
     "Drawers/IObjectDrawer.ts",
     "Drawers/LineDrawer.ts",
     "Drawers/RectangleDrawer.ts",
+    "Drawers/OvalDrawer.ts",
+    "Drawers/TriangleDrawer.ts",
     "Components/DisplayComponent.ts",
     "Components/Tools/LineDisplayComponent.ts",
     "Components/Tools/RectangleDisplayComponent.ts",
+    "Components/Tools/OvalDisplayComponent.ts",
+    "Components/Tools/TriangleDisplayComponent.ts",
     "typings/fabric/index.d.ts",
     "typings/jquery/jquery.d.ts"
   ],

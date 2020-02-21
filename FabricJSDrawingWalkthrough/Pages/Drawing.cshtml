@@ -15,6 +15,8 @@
                     <div class="btn-group btn-group-toggle" role="group" data-toggle="buttons" aria-label="Drawing Components">
                         <div id="lineDisplayComponent"></div>
                         <div id="rectangleDisplayComponent"></div>
+                        <div id="ovalDisplayComponent"></div>
+                        <div id="triangleDisplayComponent"></div>
                     </div>
                 </div>
             </div>
@@ -49,7 +51,9 @@
             //Create a list of available display components
             const components = [
                 { id: '#lineDisplayComponent', type: 'line' },
-                { id: '#rectangleDisplayComponent', type: 'rect' }
+                { id: '#rectangleDisplayComponent', type: 'rect' },
+                { id: '#ovalDisplayComponent', type: 'oval' },
+                { id: '#triangleDisplayComponent', type: 'tria' }
             ];
 
             //Add the components to the DrawingEditor, which will render them.

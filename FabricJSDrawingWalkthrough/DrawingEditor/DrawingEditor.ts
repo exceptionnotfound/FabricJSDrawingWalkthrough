@@ -26,7 +26,9 @@ class DrawingEditor {
 
         this.drawers = [
             new LineDrawer(),
-            new RectangleDrawer()
+            new RectangleDrawer(),
+            new OvalDrawer(),
+            new TriangleDrawer()
         ];
         this._drawer = this.drawers[DrawingMode.Line];
         this.drawerOptions = {
@@ -127,6 +129,12 @@ class DrawingEditor {
                 break;
             case 'rect':
                 this.components[component] = [new RectangleDisplayComponent(target, this)];
+                break;
+            case 'oval':
+                this.components[component] = [new OvalDisplayComponent(target, this)];
+                break;
+            case 'tria':
+                this.components[component] = [new TriangleDisplayComponent(target, this)];
                 break;
         }
     }
