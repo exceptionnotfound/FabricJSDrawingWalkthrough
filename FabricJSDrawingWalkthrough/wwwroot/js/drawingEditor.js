@@ -17,8 +17,10 @@ class DrawingEditor {
         $(`#${selector}`).replaceWith(`<canvas id="${selector}" height=${canvasHeight} width=${canvasWidth}> </canvas>`);
         this.cursorMode = 0 /* Draw */;
         this.canvas = new fabric.Canvas(`${selector}`, { selection: false });
+        this.components = [];
         this.drawers = [
             new LineDrawer(),
+            new RectangleDrawer()
         ];
         this._drawer = this.drawers[0 /* Line */];
         this.drawerOptions = {
@@ -104,6 +106,9 @@ class DrawingEditor {
             case 'line':
                 this.components[component] = [new LineDisplayComponent(target, this)];
                 break;
+            case 'rect':
+                this.components[component] = [new RectangleDisplayComponent(target, this)];
+                break;
         }
     }
     componentSelected(componentName) {
@@ -140,24 +145,55 @@ class LineDrawer {
         });
     }
 }
+class RectangleDrawer {
+    constructor() {
+        this.drawingMode = 1 /* Rectangle */;
+    }
+    make(x, y, options, width, height) {
+        this.origX = x;
+        this.origY = y;
+        return new Promise(resolve => {
+            resolve(new fabric.Rect(Object.assign({ left: x, top: y, width: width, height: height, fill: 'transparent' }, options)));
+        });
+    }
+    resize(object, x, y) {
+        object.set({
+            originX: this.origX > x ? 'right' : 'left',
+            originY: this.origY > y ? 'bottom' : 'top',
+            width: Math.abs(this.origX - x),
+            height: Math.abs(this.origY - y),
+        }).setCoords();
+        return new Promise(resolve => {
+            resolve(object);
+        });
+    }
+}
 class DisplayComponent {
     constructor(mode, selector, parent, options) {
         this.drawingMode = mode;
         this.target = selector;
+        this.cssClass = options.classNames;
         this.hoverText = options.altText;
         this.svg = options.svg;
+        this.childName = options.childName;
         this.canvasDrawer = parent;
         this.render();
         this.attachEvents();
     }
     //This method replaces the target HTML with the component's HTML.
     render() {
-        const html = `<label id="${this.target.replace('#', '')}" 
-                      class="btn btn-primary text-light" title="${this.hoverText}">
-                        <input type="radio" name="options" autocomplete="off">
-                        ${this.svg}
-                      </label>`;
+        const html = `<label id="${this.target.replace('#', '')}" class="btn btn-primary text-light " title="${this.hoverText}">
+                        <input type="radio" name="options" autocomplete="off"> ${this.iconStr()}
+                     </label>`;
         $(this.target).replaceWith(html);
+    }
+    iconStr() {
+        if (this.cssClass != null) {
+            return `<i class="${this.cssClass}"></i>`;
+        }
+        else {
+            return this.svg;
+        }
     }
     //This method attaches the componentSelected event in DrawingEditor
     attachEvents() {
@@ -169,7 +205,8 @@ class DisplayComponent {
         // This long jQuery method chain is 
         // looking for the <input type="radio">
         // from the render() method.
-        $(this.target).children().first().click(data, function () {
+        $(this.target).click(data, function () {
+            console.log("Click event fired!");
             data.container.drawingMode = data.mode;
             data.container.componentSelected(data.target);
         });
@@ -188,5 +225,16 @@ class LineDisplayComponent extends DisplayComponent {
                   </svg>`
         });
         super(0 /* Line */, target, parent, options);
+    }
+}
+class RectangleDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Rectangle',
+            classNames: 'fa fa-square-o',
+            childName: null
+        });
+        super(1 /* Rectangle */, target, parent, options);
     }
 }

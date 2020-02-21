@@ -22,8 +22,11 @@ class DrawingEditor {
 
         this.canvas = new fabric.Canvas(`${selector}`, { selection: false });
 
+        this.components = [];
+
         this.drawers = [
             new LineDrawer(),
+            new RectangleDrawer()
         ];
         this._drawer = this.drawers[DrawingMode.Line];
         this.drawerOptions = {
@@ -121,6 +124,9 @@ class DrawingEditor {
         switch (component) {
             case 'line':
                 this.components[component] = [new LineDisplayComponent(target, this)];
+                break;
+            case 'rect':
+                this.components[component] = [new RectangleDisplayComponent(target, this)];
                 break;
         }
     }
