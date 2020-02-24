@@ -17,13 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DrawingEditor\Components\ControlComponent.ts" />
     <None Remove="DrawingEditor\Components\DisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\DeleteComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\LineDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\OvalDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\RectangleDisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\TextDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\TriangleDisplayComponent.ts" />
     <None Remove="DrawingEditor\Drawers\OvalDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\RectangleDrawer.ts" />
+    <None Remove="DrawingEditor\Drawers\TextDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\TriangleDrawer.ts" />
     <None Remove="DrawingEditor\Enums\CursorMode.ts" />
   </ItemGroup>

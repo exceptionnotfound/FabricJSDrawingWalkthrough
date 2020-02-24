@@ -22,7 +22,8 @@ class DrawingEditor {
             new LineDrawer(),
             new RectangleDrawer(),
             new OvalDrawer(),
-            new TriangleDrawer()
+            new TriangleDrawer(),
+            new TextDrawer()
         ];
         this._drawer = this.drawers[0 /* Line */];
         this.drawerOptions = {
@@ -70,8 +71,14 @@ class DrawingEditor {
             this.cursorMode = 1 /* Select */;
             //sets currently selected object
             this.object = o.target;
+            if (this.components['delete'] !== undefined) {
+                this.components['delete'][0].enable();
+            }
         });
         this.canvas.on('selection:cleared', (o) => {
+            if (this.components['delete'] !== undefined) {
+                this.components['delete'][0].disable();
+            }
             this.cursorMode = 0 /* Draw */;
         });
     }
@@ -117,6 +124,12 @@ class DrawingEditor {
             case 'tria':
                 this.components[component] = [new TriangleDisplayComponent(target, this)];
                 break;
+            case 'text':
+                this.components[component] = [new TextDisplayComponent(target, this)];
+                break;
+            case 'delete':
+                this.components[component] = [new DeleteComponent(target, this)];
+                break;
         }
     }
     componentSelected(componentName) {
@@ -132,6 +145,11 @@ class DrawingEditor {
             if (obj[0].selectedChanged !== undefined)
                 obj[0].selectedChanged(componentName);
         }
+    }
+    deleteSelected() {
+        const obj = this.canvas.getActiveObject();
+        this.canvas.remove(this.canvas.getActiveObject());
+        this.canvas.renderAll();
     }
 }
 class LineDrawer {
@@ -222,6 +240,26 @@ class TriangleDrawer {
         });
     }
 }
+class TextDrawer {
+    constructor() {
+        this.drawingMode = 4 /* Text */;
+    }
+    make(x, y, options) {
+        const text = document.getElementById('textComponentInput');
+        return new Promise(resolve => {
+            resolve(new fabric.Text(text.value, Object.assign({ left: x, top: y }, options)));
+        });
+    }
+    resize(object, x, y) {
+        object.set({
+            left: x,
+            top: y
+        }).setCoords();
+        return new Promise(resolve => {
+            resolve(object);
+        });
+    }
+}
 class DisplayComponent {
     constructor(mode, selector, parent, options) {
         this.drawingMode = mode;
@@ -266,6 +304,29 @@ class DisplayComponent {
     selectedChanged(componentName) { }
 }
 class DisplayComponentOptions {
+}
+class ControlComponent {
+    constructor(selector, classNames, altText, parent, handlers) {
+        this.target = selector;
+        this.cssClass = classNames;
+        this.hoverText = altText;
+        this.canvassDrawer = parent;
+        this.render();
+        this.handlers = handlers;
+        this.attachEvents();
+    }
+    attachEvents() {
+        if (this.handlers['click'] != null) {
+            $(this.target).click(this, () => {
+                this.handlers['click']();
+            });
+        }
+        if (this.handlers['change'] != null) {
+            $(this.target).change(this, () => {
+                this.handlers['change']();
+            });
+        }
+    }
 }
 class LineDisplayComponent extends DisplayComponent {
     constructor(target, parent) {
@@ -313,5 +374,66 @@ class TriangleDisplayComponent extends DisplayComponent {
                   </svg>`,
         });
         super(3 /* Triangle */, target, parent, options);
+    }
+}
+class TextDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Text',
+            classNames: 'fa fa-font',
+            childName: 'textComponentInput'
+        });
+        super(4 /* Text */, target, parent, options);
+    }
+    render() {
+        super.render();
+        //We need to render a hidden textbox next to the text button.
+        $(this.target).parent().append(`<input id="${this.childName}" class="col-sm-6 form-control hidden" />`);
+    }
+    //Show the textbox if the text button is selected
+    selectionUpdated(newTarget) {
+        $(newTarget).removeClass('hidden');
+    }
+    selectedChanged(componentName) {
+        //If the text button is selected, show the textbox
+        if (componentName === this.target) {
+            $(`#${this.childName}`).removeClass('hidden');
+        }
+        //Otherwise, hide the textbox.
+        else {
+            $(`#${this.childName}`).addClass('hidden').val('');
+        }
+    }
+}
+class DeleteComponent extends ControlComponent {
+    constructor(target, parent) {
+        super(target, "fa fa-trash-o", //CSS class for icons
+        "Delete Selected Item", //Tooltip text
+        parent, {
+            //The component invokes a method on DrawingEditor to delete selected objects.
+            'click': () => { parent.deleteSelected(); }
+        });
+    }
+    //Render a button with a trash can icon
+    render() {
+        const html = `<button id="${this.target.replace('#', '')}" title="${this.hoverText}" disabled class="btn btn-danger">
+                        <i class="${this.cssClass}"></i>
+                     </button>`;
+        $(this.target).replaceWith(html);
+    }
+    //Enable the button
+    enable() {
+        var ele = document.getElementById(this.target.replace('#', ''));
+        Object.assign(ele, {
+            disabled: false
+        });
+    }
+    //Disable the button
+    disable() {
+        var ele = document.getElementById(this.target.replace('#', ''));
+        Object.assign(ele, {
+            disabled: true
+        });
     }
 }

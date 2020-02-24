@@ -28,7 +28,8 @@ class DrawingEditor {
             new LineDrawer(),
             new RectangleDrawer(),
             new OvalDrawer(),
-            new TriangleDrawer()
+            new TriangleDrawer(),
+            new TextDrawer()
         ];
         this._drawer = this.drawers[DrawingMode.Line];
         this.drawerOptions = {
@@ -85,9 +86,17 @@ class DrawingEditor {
             this.cursorMode = CursorMode.Select;
             //sets currently selected object
             this.object = o.target;
+
+            if (this.components['delete'] !== undefined) {
+                (this.components['delete'][0] as DeleteComponent).enable();
+            }
         });
 
         this.canvas.on('selection:cleared', (o) => {
+            if (this.components['delete'] !== undefined) {
+                (this.components['delete'][0] as DeleteComponent).disable();
+            }
+
             this.cursorMode = CursorMode.Draw;
         });
     }
@@ -136,6 +145,12 @@ class DrawingEditor {
             case 'tria':
                 this.components[component] = [new TriangleDisplayComponent(target, this)];
                 break;
+            case 'text':
+                this.components[component] = [new TextDisplayComponent(target, this)];
+                break;
+            case 'delete':
+                this.components[component] = [new DeleteComponent(target, this)];
+                break;
         }
     }
 
@@ -154,5 +169,12 @@ class DrawingEditor {
             if (obj[0].selectedChanged !== undefined)
                 obj[0].selectedChanged(componentName);
         }
+    }
+
+    deleteSelected(): void {
+        const obj = this.canvas.getActiveObject();
+
+        this.canvas.remove(this.canvas.getActiveObject());
+        this.canvas.renderAll();
     }
 }

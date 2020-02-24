@@ -7,6 +7,11 @@
 <h1>Make a Drawing!</h1>
 
 <div class="row bg-secondary text-light">
+    <div class="btn-toolbar">
+        <div class="btn-group mr-2" role="group">
+            <div id="deleteComponent"></div>
+        </div>
+    </div>
     <div class="col-sm-11">
         <div class="row col-12">
             <div class="row drawingToolbar">
@@ -17,6 +22,7 @@
                         <div id="rectangleDisplayComponent"></div>
                         <div id="ovalDisplayComponent"></div>
                         <div id="triangleDisplayComponent"></div>
+                        <div id="textDisplayComponent"></div>
                     </div>
                 </div>
             </div>
@@ -39,6 +45,7 @@
     <script src="~/lib/fabric.js/fabric.min.js"></script>
     <script src="~/js/drawingEditor.js" asp-append-version="true"></script>
     <script>
+        var editor;
         $(function () {
             //Calculate canvas height as a function of the window size.
             var canvasHeight = (window.innerHeight - $('#canvas').offset().top) * .9;
@@ -46,19 +53,28 @@
 
             //Instantiate our new drawer
             //The canvas is created inside this constructor, using the selector passed.
-            var editor = new DrawingEditor('canvas', canvasHeight, canvasWidth);
+            editor = new DrawingEditor('canvas', canvasHeight, canvasWidth);
 
             //Create a list of available display components
             const components = [
                 { id: '#lineDisplayComponent', type: 'line' },
                 { id: '#rectangleDisplayComponent', type: 'rect' },
                 { id: '#ovalDisplayComponent', type: 'oval' },
-                { id: '#triangleDisplayComponent', type: 'tria' }
+                { id: '#triangleDisplayComponent', type: 'tria' },
+                { id: '#textDisplayComponent', type: 'text' },
+                { id: '#deleteComponent', type: 'delete'}
             ];
 
             //Add the components to the DrawingEditor, which will render them.
             editor.addComponents(components);
             $('#lineDisplayComponent').click();
+
+            $("html").on('keydown', function (event) {
+                const key = event.key;
+                if (key == "Delete") {
+                    editor.deleteSelected();
+                }
+            });
         });
     </script>
 }
