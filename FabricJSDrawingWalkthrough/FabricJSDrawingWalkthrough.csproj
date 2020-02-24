@@ -19,6 +19,10 @@
   <ItemGroup>
     <None Remove="DrawingEditor\Components\ControlComponent.ts" />
     <None Remove="DrawingEditor\Components\DisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\ImageDropdown.ts" />
+    <None Remove="DrawingEditor\Components\ImageDropdownOptions.ts" />
+    <None Remove="DrawingEditor\Components\ImageOption.ts" />
+    <None Remove="DrawingEditor\Components\Tools\ColorChooserComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\DeleteComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\LineDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\OvalDisplayComponent.ts" />
@@ -32,6 +36,7 @@
     <None Remove="DrawingEditor\Drawers\TextDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\TriangleDrawer.ts" />
     <None Remove="DrawingEditor\Enums\CursorMode.ts" />
+    <None Remove="DrawingEditor\Enums\ImageDropdownStyle.ts" />
   </ItemGroup>
 
   <ItemGroup>

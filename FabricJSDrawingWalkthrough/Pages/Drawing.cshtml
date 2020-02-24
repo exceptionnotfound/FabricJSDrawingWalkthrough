@@ -6,28 +6,34 @@
 
 <h1>Make a Drawing!</h1>
 
-<div class="row bg-secondary text-light">
+<div class="row drawingToolbar bg-secondary text-light">
     <div class="btn-toolbar">
         <div class="btn-group mr-2" role="group">
             <div id="deleteComponent"></div>
         </div>
     </div>
-    <div class="col-sm-11">
-        <div class="row col-12">
-            <div class="row drawingToolbar">
-                <label class="col-form-label controlLabel">Tools:</label>
-                <div class="d-inline-block">
-                    <div class="btn-group btn-group-toggle" role="group" data-toggle="buttons" aria-label="Drawing Components">
-                        <div id="polylineDisplayComponent"></div>
-                        <div id="lineDisplayComponent"></div>
-                        <div id="rectangleDisplayComponent"></div>
-                        <div id="ovalDisplayComponent"></div>
-                        <div id="triangleDisplayComponent"></div>
-                        <div id="textDisplayComponent"></div>
-                    </div>
-                </div>
+    <div class="btn-toolbar">
+        <label class="col-form-label controlLabel">Tools:</label>
+        <div class="d-inline-block">
+            <div class="btn-group btn-group-toggle" role="group" data-toggle="buttons" aria-label="Drawing Components">
+                <div id="polylineDisplayComponent"></div>
+                <div id="lineDisplayComponent"></div>
+                <div id="rectangleDisplayComponent"></div>
+                <div id="ovalDisplayComponent"></div>
+                <div id="triangleDisplayComponent"></div>
+                <div id="textDisplayComponent"></div>
             </div>
         </div>
+    </div>
+    <div class="separator"></div>
+    <div class="btn-toolbar">
+        <label class="col-form-label controlLabel d-inline">Lines:</label>
+        <div id="lineColorComponent"></div>
+
+        <div class="separator"></div>
+
+        <label class="col-form-label controlLabel ">Fill:</label>
+        <div id="fillColorComponent"></div>
     </div>
 </div>
 
@@ -64,7 +70,9 @@
                 { id: '#triangleDisplayComponent', type: 'tria' },
                 { id: '#textDisplayComponent', type: 'text' },
                 { id: '#polylineDisplayComponent', type: 'polyline' },
-                { id: '#deleteComponent', type: 'delete'}
+                { id: '#deleteComponent', type: 'delete' },
+                { id: 'fillColorComponent', type: 'fillColorChooser' },
+                { id: 'lineColorComponent', type: 'lineColorChooser' }
             ];
 
             //Add the components to the DrawingEditor, which will render them.

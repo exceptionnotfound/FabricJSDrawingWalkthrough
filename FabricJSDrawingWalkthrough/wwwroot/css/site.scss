@@ -5,10 +5,10 @@
         size: auto;
         font-size: 10px;
     }
+}
 
-    html, body {
-        height: 100%;
-    }
+html, body {
+    height: 100%;
 }
 
 .cursor-grab {
@@ -44,7 +44,7 @@ canvas {
 
     > .CanvasContainer {
         padding: 0;
-        width: 100%;
+        width: 80%;
     }
 
     #ImageDiv {
@@ -66,6 +66,13 @@ canvas {
 
 //Tool Bar
 .drawingToolbar {
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+        justify-content: flex-end;
+    }
+
     input[type="range"] {
         margin-top: 15px;
         height: 10px;
@@ -85,6 +92,51 @@ canvas {
     }
 }
 
+//Images
+.draggableImageDiv {
+    display: inline-block;
+    margin: .25em;
+    border: 1px solid transparent;
+
+    &.hoveredImage {
+        border-color: orange;
+    }
+}
+
+.draggingImage {
+    z-index: 1000;
+    opacity: 0.9;
+    border: 1px solid orange;
+    position: absolute;
+}
+
+//Notification
+.notificationBar {
+    height: 30px;
+    border: 3px solid gray;
+    border-top: none;
+}
+
+//Legend
+.legend {
+    margin: 7px;
+    border: 1px solid darkgray;
+    position: relative;
+    z-index: 800;
+    background-color: white;
+    overflow: hidden;
+
+    > .title {
+        border-bottom: 1px solid darkgray;
+        text-align: center;
+        font-size: small;
+    }
+
+    > #legendContents {
+        overflow-y: auto;
+        font-size: x-small;
+    }
+}
 
 .imageDropdown {
     display: inline-block;

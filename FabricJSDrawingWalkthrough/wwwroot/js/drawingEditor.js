@@ -134,6 +134,24 @@ class DrawingEditor {
             case 'delete':
                 this.components[component] = [new DeleteComponent(target, this)];
                 break;
+            case 'lineColorChooser':
+                this.components[component] = [
+                    new ColorChooserComponent(target, this, '#000000', {
+                        'change': (newColor) => {
+                            this.setLineColor(newColor);
+                        }
+                    })
+                ];
+                break;
+            case 'fillColorChooser':
+                this.components[component] = [
+                    new ColorChooserComponent(target, this, '', {
+                        'change': (newColor) => {
+                            this.setFillColor(newColor);
+                        }
+                    })
+                ];
+                break;
         }
     }
     componentSelected(componentName) {
@@ -154,6 +172,12 @@ class DrawingEditor {
         const obj = this.canvas.getActiveObject();
         this.canvas.remove(this.canvas.getActiveObject());
         this.canvas.renderAll();
+    }
+    setFillColor(color) {
+        this.drawerOptions.fill = color;
+    }
+    setLineColor(color) {
+        this.drawerOptions.stroke = color;
     }
 }
 class LineDrawer {
@@ -355,6 +379,147 @@ class ControlComponent {
                 this.handlers['change']();
             });
         }
+    }
+}
+class ImageDropdown {
+    constructor(selector, options) {
+        this.selector = selector;
+        this.options = options;
+        this.element = document.getElementById(this.selector);
+        this.handlers = options.handlers;
+        this.render();
+        this.attachEvents();
+    }
+    render() {
+        this.element.outerHTML =
+            `<div id="${this.selector}" class='imageDropdown'>
+                 <div style="width: ${this.options.width}px">
+                    ${this.renderSelectedDiv()}
+                    <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                 </div>
+                 <ul class="hidden" style="width: ${this.options.childWidth || this.options.width}px">
+                    ${this.renderOptions()}                    
+                 </ul>
+             </div>`;
+    }
+    renderSelectedDiv() {
+        switch (this.options.selectedStyle) {
+            case 1 /* Copy */:
+                return `<div id="${this.selector}_selected" style="width: ${this.options.width - 20}px">${this.options.optionsList[this.options.selectedIndex].display}</div>`;
+            case 0 /* Fill */:
+                return `<div id="${this.selector}_selected" style="width: ${this.options.width - 20}px; height:20px; background-color: ${this.options.optionsList[this.options.selectedIndex].value}"><span></span></div>`;
+        }
+    }
+    renderOptions() {
+        let output = '';
+        this.options.optionsList.map((record) => {
+            switch (this.options.selectedStyle) {
+                case 1 /* Copy */:
+                    output += `<li class="vertical" title="${record.text}">${record.display}</li>`;
+                    break;
+                case 0 /* Fill */:
+                    output += `<li class="horizontal" title="${record.text}">${record.display}</li>`;
+                    break;
+            }
+        });
+        return output;
+    }
+    attachEvents() {
+        this.element = document.getElementById(this.selector);
+        const container = this;
+        const selectedDiv = this.element.children[0];
+        const list = this.element.children[1];
+        const options = [...list.children];
+        selectedDiv.addEventListener('click', () => {
+            if (list.classList.contains('hidden'))
+                list.classList.remove('hidden');
+            else
+                list.classList.add('hidden');
+        });
+        options.forEach((element, index) => {
+            element.addEventListener('click', (o) => {
+                const selected = this.options.optionsList[index];
+                list.classList.add('hidden');
+                //Update value and display
+                if (container.value != selected.value) {
+                    switch (container.options.selectedStyle) {
+                        case 1 /* Copy */:
+                            selectedDiv.children[0].innerHTML = selected.display;
+                            container.value = selected.value;
+                            break;
+                        case 0 /* Fill */:
+                            Object.assign(selectedDiv.children[0].style, {
+                                backgroundColor: selected.value
+                            });
+                            container.value = selected.value;
+                            break;
+                    }
+                    if (container.handlers['change'] != null) {
+                        container.handlers['change'](this.value);
+                    }
+                }
+            });
+        });
+    }
+}
+class ImageDropdownOptions {
+}
+class ImageOption {
+}
+class ColorChooserComponent {
+    constructor(target, parent, defaultColor, handlers) {
+        this.target = target;
+        this.parent = parent;
+        this.defaultColor = defaultColor;
+        this.handlers = handlers;
+        this.colors = [
+            { key: 0, code: '', text: 'Transparent' },
+            { key: 1, code: '#FFFFFF', text: 'White' },
+            { key: 2, code: '#C0C0C0', text: 'Silver' },
+            { key: 3, code: '#808080', text: 'Gray' },
+            { key: 4, code: '#000000', text: 'Black' },
+            { key: 5, code: '#FF0000', text: 'Red' },
+            { key: 6, code: '#800000', text: 'Maroon' },
+            { key: 7, code: '#FFFF00', text: 'Yellow' },
+            { key: 8, code: '#808000', text: 'Olive' },
+            { key: 9, code: '#00FF00', text: 'Lime' },
+            { key: 10, code: '#008000', text: 'Green' },
+            { key: 11, code: '#00FFFF', text: 'Aqua' },
+            { key: 12, code: '#008080', text: 'Teal' },
+            { key: 13, code: '#0000FF', text: 'Blue' },
+            { key: 14, code: '#000080', text: 'Navy' },
+            { key: 15, code: '#FF00FF', text: 'Fuchsia' },
+            { key: 16, code: '#800080', text: 'Purple' }
+        ];
+        this.render();
+    }
+    render() {
+        var opt = new ImageDropdownOptions();
+        const def = this.colors.filter((c) => {
+            if (c.code === this.defaultColor)
+                return c;
+        });
+        Object.assign(opt, {
+            selectedStyle: 0 /* Fill */,
+            selectedIndex: def[0].key,
+            width: 50,
+            childWidth: 153,
+            optionsList: this.getOptions(),
+            handlers: this.handlers
+        });
+        new ImageDropdown(this.target, opt);
+    }
+    getOptions() {
+        const values = [];
+        this.colors.forEach((color) => {
+            const fillColor = color.code === '' ? 'none' : color.code;
+            values.push({
+                display: `<svg width="16px" height="15px" viewBox="0 0 15 15"><rect width="15" height="15" top="0" fill="${fillColor}" stroke="black" stroke-width="1px" /></svg>`,
+                value: color.code,
+                text: color.text
+            });
+        });
+        return values;
     }
 }
 class LineDisplayComponent extends DisplayComponent {

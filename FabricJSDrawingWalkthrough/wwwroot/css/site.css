@@ -7180,9 +7180,10 @@ a.text-dark:hover, a.text-dark:focus {
 @media print {
   @page {
     size: auto;
-    font-size: 10px; }
-  html, body {
-    height: 100%; } }
+    font-size: 10px; } }
+
+html, body {
+  height: 100%; }
 
 .cursor-grab:hover {
   cursor: grab; }
@@ -7208,7 +7209,7 @@ canvas {
   overflow: hidden; }
   .editorContainer > .CanvasContainer, .displayContainer > .CanvasContainer {
     padding: 0;
-    width: 100%; }
+    width: 80%; }
   .editorContainer #ImageDiv, .displayContainer #ImageDiv {
     width: 20%;
     border-left: 3px solid gray;
@@ -7221,20 +7222,56 @@ canvas {
   .displayContainer > .CanvasContainer {
     width: 100%; }
 
-.drawingToolbar input[type="range"] {
-  margin-top: 15px;
-  height: 10px; }
+.drawingToolbar {
+  display: flex;
+  justify-content: space-between; }
+  .drawingToolbar > div {
+    justify-content: flex-end; }
+  .drawingToolbar input[type="range"] {
+    margin-top: 15px;
+    height: 10px; }
+  .drawingToolbar .controlLabel {
+    font-size: 1.05em;
+    padding: calc(1px + 0.37rem) 5px calc(1px + 0.37rem) 15px; }
+  .drawingToolbar .separator {
+    width: 1px;
+    background-color: lightgray;
+    border: 1px inset lightgray;
+    display: inline-block;
+    margin: 4px 0; }
 
-.drawingToolbar .controlLabel {
-  font-size: 1.05em;
-  padding: calc(1px + 0.37rem) 5px calc(1px + 0.37rem) 15px; }
-
-.drawingToolbar .separator {
-  width: 1px;
-  background-color: lightgray;
-  border: 1px inset lightgray;
+.draggableImageDiv {
   display: inline-block;
-  margin: 4px 0; }
+  margin: .25em;
+  border: 1px solid transparent; }
+  .draggableImageDiv.hoveredImage {
+    border-color: orange; }
+
+.draggingImage {
+  z-index: 1000;
+  opacity: 0.9;
+  border: 1px solid orange;
+  position: absolute; }
+
+.notificationBar {
+  height: 30px;
+  border: 3px solid gray;
+  border-top: none; }
+
+.legend {
+  margin: 7px;
+  border: 1px solid darkgray;
+  position: relative;
+  z-index: 800;
+  background-color: white;
+  overflow: hidden; }
+  .legend > .title {
+    border-bottom: 1px solid darkgray;
+    text-align: center;
+    font-size: small; }
+  .legend > #legendContents {
+    overflow-y: auto;
+    font-size: x-small; }
 
 .imageDropdown {
   display: inline-block;

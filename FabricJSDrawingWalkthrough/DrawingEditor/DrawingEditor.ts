@@ -155,6 +155,24 @@ class DrawingEditor {
             case 'delete':
                 this.components[component] = [new DeleteComponent(target, this)];
                 break;
+            case 'lineColorChooser':
+                this.components[component] = [
+                    new ColorChooserComponent(target, this, '#000000', {
+                        'change': (newColor: string) => {
+                            this.setLineColor(newColor);
+                        }
+                    })
+                ];
+                break;
+            case 'fillColorChooser':
+                this.components[component] = [
+                    new ColorChooserComponent(target, this, '', {
+                        'change': (newColor: string) => {
+                            this.setFillColor(newColor);
+                        }
+                    })
+                ];
+                break;
         }
     }
 
@@ -180,5 +198,13 @@ class DrawingEditor {
 
         this.canvas.remove(this.canvas.getActiveObject());
         this.canvas.renderAll();
+    }
+
+    setFillColor(color: string): void {
+        this.drawerOptions.fill = color;
+    }
+
+    setLineColor(color: string): void {
+        this.drawerOptions.stroke = color;
     }
 }
