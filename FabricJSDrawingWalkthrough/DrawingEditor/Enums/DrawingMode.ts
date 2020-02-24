@@ -4,6 +4,6 @@
     Oval,
     Triangle,
     Text,
-    Path,
-    Polyline
+    Polyline,
+    Path
 }

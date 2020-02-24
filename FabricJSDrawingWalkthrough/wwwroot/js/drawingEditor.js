@@ -23,7 +23,8 @@ class DrawingEditor {
             new RectangleDrawer(),
             new OvalDrawer(),
             new TriangleDrawer(),
-            new TextDrawer()
+            new TextDrawer(),
+            new PolylineDrawer()
         ];
         this._drawer = this.drawers[0 /* Line */];
         this.drawerOptions = {
@@ -127,6 +128,9 @@ class DrawingEditor {
             case 'text':
                 this.components[component] = [new TextDisplayComponent(target, this)];
                 break;
+            case 'polyline':
+                this.components[component] = [new PolylineDisplayComponent(target, this)];
+                break;
             case 'delete':
                 this.components[component] = [new DeleteComponent(target, this)];
                 break;
@@ -211,6 +215,31 @@ class OvalDrawer {
             originY: this.origY > y ? 'bottom' : 'top',
             rx: Math.abs(x - object.left) / 2,
             ry: Math.abs(y - object.top) / 2
+        }).setCoords();
+        return new Promise(resolve => {
+            resolve(object);
+        });
+    }
+}
+class PolylineDrawer {
+    constructor() {
+        this.drawingMode = 5 /* Polyline */;
+    }
+    make(x, y, options, rx, ry) {
+        return new Promise(resolve => {
+            resolve(new fabric.Polyline([{ x, y }], Object.assign(Object.assign({}, options), { fill: 'transparent' })));
+        });
+    }
+    resize(object, x, y) {
+        object.points.push(new fabric.Point(x, y));
+        const dim = object._calcDimensions();
+        object.set({
+            left: dim.left,
+            top: dim.top,
+            width: dim.width,
+            height: dim.height,
+            dirty: true,
+            pathOffset: new fabric.Point(dim.left + dim.width / 2, dim.top + dim.height / 2)
         }).setCoords();
         return new Promise(resolve => {
             resolve(object);
@@ -360,6 +389,17 @@ class OvalDisplayComponent extends DisplayComponent {
             childName: null
         });
         super(2 /* Oval */, target, parent, options);
+    }
+}
+class PolylineDisplayComponent extends DisplayComponent {
+    constructor(target, parent) {
+        const options = new DisplayComponentOptions();
+        Object.assign(options, {
+            altText: 'Pencil',
+            classNames: 'fa fa-pencil',
+            childName: null
+        });
+        super(5 /* Polyline */, target, parent, options);
     }
 }
 class TriangleDisplayComponent extends DisplayComponent {

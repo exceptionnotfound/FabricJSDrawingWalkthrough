@@ -29,7 +29,8 @@ class DrawingEditor {
             new RectangleDrawer(),
             new OvalDrawer(),
             new TriangleDrawer(),
-            new TextDrawer()
+            new TextDrawer(),
+            new PolylineDrawer()
         ];
         this._drawer = this.drawers[DrawingMode.Line];
         this.drawerOptions = {
@@ -147,6 +148,9 @@ class DrawingEditor {
                 break;
             case 'text':
                 this.components[component] = [new TextDisplayComponent(target, this)];
+                break;
+            case 'polyline':
+                this.components[component] = [new PolylineDisplayComponent(target, this)];
                 break;
             case 'delete':
                 this.components[component] = [new DeleteComponent(target, this)];
