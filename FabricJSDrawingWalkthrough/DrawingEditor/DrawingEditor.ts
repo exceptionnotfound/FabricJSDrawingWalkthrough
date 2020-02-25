@@ -173,6 +173,9 @@ class DrawingEditor {
                     })
                 ];
                 break;
+            case 'lineType':
+                this.components[component] = [new LineTypeComponent(target, this)];
+                break;
         }
     }
 

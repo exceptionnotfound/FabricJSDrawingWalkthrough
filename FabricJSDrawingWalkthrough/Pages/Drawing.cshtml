@@ -27,6 +27,11 @@
     </div>
     <div class="separator"></div>
     <div class="btn-toolbar">
+        <label class="col-form-label controlLabel d-inline">Style:</label>
+        <div id="lineTypeComponent"></div>
+
+        <div class="separator"></div>
+
         <label class="col-form-label controlLabel d-inline">Lines:</label>
         <div id="lineColorComponent"></div>
 
@@ -72,7 +77,8 @@
                 { id: '#polylineDisplayComponent', type: 'polyline' },
                 { id: '#deleteComponent', type: 'delete' },
                 { id: 'fillColorComponent', type: 'fillColorChooser' },
-                { id: 'lineColorComponent', type: 'lineColorChooser' }
+                { id: 'lineColorComponent', type: 'lineColorChooser' },
+                { id: 'lineTypeComponent', type: 'lineType' },
             ];
 
             //Add the components to the DrawingEditor, which will render them.

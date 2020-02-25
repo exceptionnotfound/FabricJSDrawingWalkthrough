@@ -30,6 +30,7 @@
     "Components/ImageOption.ts",
     "Components/Tools/ColorChooserComponent.ts",
     "Components/Tools/LineDisplayComponent.ts",
+    "Components/Tools/LineTypeComponent.ts",
     "Components/Tools/RectangleDisplayComponent.ts",
     "Components/Tools/OvalDisplayComponent.ts",
     "Components/Tools/PolylineDisplayComponent.ts",

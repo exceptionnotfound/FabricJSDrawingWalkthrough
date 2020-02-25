@@ -14,7 +14,7 @@
         this.element.outerHTML =
             `<div id="${this.selector}" class='imageDropdown'>
                  <div style="width: ${this.options.width}px">
-                    ${this.renderSelected()}
+                    ${this.renderSelectedDiv()}
                     <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
                  </div>
                  <ul class="hidden" style="width: ${this.options.childWidth || this.options.width}px">
@@ -23,13 +23,13 @@
              </div>`;
     }
 
-    renderSelected() {
-        switch (this.options.selectedStyle) {
+    renderSelectedDiv() {        
+        switch (this.options.selectedStyle) {            
             case ImageDropdownStyle.Copy:
                 return `<div id="${this.selector}_selected" style="width: ${this.options.width - 20}px">${this.options.optionsList[this.options.selectedIndex].display}</div>`;
             case ImageDropdownStyle.Fill:
                 return `<div id="${this.selector}_selected" style="width: ${this.options.width - 20}px; height:20px; background-color: ${this.options.optionsList[this.options.selectedIndex].value}"><span></span></div>`;
-        }
+        }       
     }
 
     renderOptions() {
@@ -42,12 +42,12 @@
                 case ImageDropdownStyle.Fill:
                     output += `<li class="horizontal" title="${record.text}">${record.display}</li>`;
                     break;
-            }
+            }            
         });
 
         return output;
     }
-
+    
     attachEvents() {
         this.element = document.getElementById(this.selector);
         const container = this;
@@ -58,11 +58,11 @@
         selectedDiv.addEventListener('click', () => {
             if (list.classList.contains('hidden'))
                 list.classList.remove('hidden');
-            else
+            else 
                 list.classList.add('hidden');
         });
-
-        options.forEach((element: HTMLLIElement, index: number) => {
+        
+        options.forEach((element: HTMLLIElement, index:number) => {
             element.addEventListener('click', (o) => {
                 const selected = this.options.optionsList[index];
                 list.classList.add('hidden');
@@ -73,7 +73,7 @@
                         case ImageDropdownStyle.Copy:
                             selectedDiv.children[0].innerHTML = selected.display;
                             container.value = selected.value;
-
+                            
                             break;
                         case ImageDropdownStyle.Fill:
                             Object.assign((selectedDiv.children[0] as HTMLElement).style, {
