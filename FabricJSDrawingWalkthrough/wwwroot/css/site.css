@@ -7223,8 +7223,7 @@ canvas {
     width: 100%; }
 
 .drawingToolbar {
-  display: flex;
-  justify-content: space-between; }
+  display: flex; }
   .drawingToolbar > div {
     justify-content: flex-end; }
   .drawingToolbar input[type="range"] {

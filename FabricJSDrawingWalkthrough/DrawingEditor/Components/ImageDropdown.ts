@@ -14,7 +14,7 @@
         this.element.outerHTML =
             `<div id="${this.selector}" class='imageDropdown'>
                  <div style="width: ${this.options.width}px">
-                    ${this.renderSelectedDiv()}
+                    ${this.renderSelected()}
                     <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
                  </div>
                  <ul class="hidden" style="width: ${this.options.childWidth || this.options.width}px">
@@ -23,7 +23,7 @@
              </div>`;
     }
 
-    renderSelectedDiv() {
+    renderSelected() {
         switch (this.options.selectedStyle) {
             case ImageDropdownStyle.Copy:
                 return `<div id="${this.selector}_selected" style="width: ${this.options.width - 20}px">${this.options.optionsList[this.options.selectedIndex].display}</div>`;
