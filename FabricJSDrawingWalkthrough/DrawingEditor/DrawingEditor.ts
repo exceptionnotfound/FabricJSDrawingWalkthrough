@@ -176,6 +176,9 @@ class DrawingEditor {
             case 'lineType':
                 this.components[component] = [new LineTypeComponent(target, this)];
                 break;
+            case 'lineThickness':
+                this.components[component] = [new LineThicknessComponent(target, this)];
+                break;
         }
     }
 
@@ -209,5 +212,9 @@ class DrawingEditor {
 
     setLineColor(color: string): void {
         this.drawerOptions.stroke = color;
+    }
+
+    setStrokeWidth(strokeWidth: number): void {
+        this.drawerOptions.strokeWidth = strokeWidth;
     }
 }

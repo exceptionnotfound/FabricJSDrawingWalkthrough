@@ -27,6 +27,11 @@
     </div>
     <div class="separator"></div>
     <div class="btn-toolbar">
+        <label class="col-form-label controlLabel d-inline">Size:</label>
+        <div id="lineThicknessComponent"></div>
+
+        <div class="separator"></div>
+
         <label class="col-form-label controlLabel d-inline">Style:</label>
         <div id="lineTypeComponent"></div>
 
@@ -79,6 +84,7 @@
                 { id: 'fillColorComponent', type: 'fillColorChooser' },
                 { id: 'lineColorComponent', type: 'lineColorChooser' },
                 { id: 'lineTypeComponent', type: 'lineType' },
+                { id: 'lineThicknessComponent', type: 'lineThickness' },
             ];
 
             //Add the components to the DrawingEditor, which will render them.

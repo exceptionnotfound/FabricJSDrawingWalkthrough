@@ -25,6 +25,7 @@
     <None Remove="DrawingEditor\Components\Tools\ColorChooserComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\DeleteComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\LineDisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\LineThicknessComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\LineTypeComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\OvalDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\PolylineDisplayComponent.ts" />
