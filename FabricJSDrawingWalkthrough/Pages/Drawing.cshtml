@@ -9,6 +9,8 @@
 <div class="row drawingToolbar bg-secondary text-light">
     <div class="btn-toolbar">
         <div class="btn-group mr-2" role="group">
+            <div id="undoComponent"></div>
+            <div id="redoComponent"></div>
             <div id="deleteComponent"></div>
         </div>
     </div>
@@ -85,6 +87,8 @@
                 { id: 'lineColorComponent', type: 'lineColorChooser' },
                 { id: 'lineTypeComponent', type: 'lineType' },
                 { id: 'lineThicknessComponent', type: 'lineThickness' },
+                { id: '#undoComponent', type: 'undo' },
+                { id: '#redoComponent', type: 'redo' }
             ];
 
             //Add the components to the DrawingEditor, which will render them.

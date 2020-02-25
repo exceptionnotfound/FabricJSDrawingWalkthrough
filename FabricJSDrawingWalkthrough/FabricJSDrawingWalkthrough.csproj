@@ -30,8 +30,10 @@
     <None Remove="DrawingEditor\Components\Tools\OvalDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\PolylineDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\RectangleDisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\RedoComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\TextDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\TriangleDisplayComponent.ts" />
+    <None Remove="DrawingEditor\Components\Tools\UndoComponent.ts" />
     <None Remove="DrawingEditor\Drawers\OvalDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\PolylineDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\RectangleDrawer.ts" />
@@ -39,6 +41,7 @@
     <None Remove="DrawingEditor\Drawers\TriangleDrawer.ts" />
     <None Remove="DrawingEditor\Enums\CursorMode.ts" />
     <None Remove="DrawingEditor\Enums\ImageDropdownStyle.ts" />
+    <None Remove="DrawingEditor\StateManager.ts" />
   </ItemGroup>
 
   <ItemGroup>

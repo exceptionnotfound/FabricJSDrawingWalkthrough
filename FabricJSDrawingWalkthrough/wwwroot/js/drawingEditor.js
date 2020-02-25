@@ -34,6 +34,7 @@ class DrawingEditor {
             strokeUniform: true
         };
         this.isDown = false;
+        this.stateManager = new StateManager(this.canvas);
         this.initializeCanvasEvents();
     }
     //Properties
@@ -67,6 +68,11 @@ class DrawingEditor {
         });
         this.canvas.on('mouse:up', (o) => {
             this.isDown = false;
+            switch (this.cursorMode) {
+                case 0 /* Draw */:
+                    this.isObjectSelected = false;
+                    this.saveState();
+            }
         });
         this.canvas.on('object:selected', (o) => {
             this.cursorMode = 1 /* Select */;
@@ -81,6 +87,9 @@ class DrawingEditor {
                 this.components['delete'][0].disable();
             }
             this.cursorMode = 0 /* Draw */;
+        });
+        this.canvas.on("object:modified", (e) => {
+            this.saveState();
         });
     }
     make(x, y) {
@@ -158,6 +167,12 @@ class DrawingEditor {
             case 'lineThickness':
                 this.components[component] = [new LineThicknessComponent(target, this)];
                 break;
+            case 'undo':
+                this.components[component] = [new UndoComponent(target, this)];
+                break;
+            case 'redo':
+                this.components[component] = [new RedoComponent(target, this)];
+                break;
         }
     }
     componentSelected(componentName) {
@@ -175,9 +190,9 @@ class DrawingEditor {
         }
     }
     deleteSelected() {
-        const obj = this.canvas.getActiveObject();
         this.canvas.remove(this.canvas.getActiveObject());
         this.canvas.renderAll();
+        this.saveState();
     }
     setFillColor(color) {
         this.drawerOptions.fill = color;
@@ -187,6 +202,68 @@ class DrawingEditor {
     }
     setStrokeWidth(strokeWidth) {
         this.drawerOptions.strokeWidth = strokeWidth;
+    }
+    undo() {
+        this.stateManager.undo();
+    }
+    redo() {
+        this.stateManager.redo();
+    }
+    saveState() {
+        this.stateManager.saveState();
+        this.canvas.renderAll();
+    }
+}
+class StateManager {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.maxCount = 100; //We keep 100 items in the stacks at any time.
+        this.currentState = canvas.toDatalessJSON();
+        this.locked = false;
+        this.redoStack = [];
+        this.stateStack = [];
+    }
+    saveState() {
+        if (!this.locked) {
+            if (this.stateStack.length === this.maxCount) {
+                //Drop the oldest element
+                this.stateStack.shift();
+            }
+            //Add the current state
+            this.stateStack.push(this.currentState);
+            //Make the state of the canvas the current state
+            this.currentState = this.canvas.toDatalessJSON();
+            //Reset the redo stack.
+            //We can only redo things that were just undone.
+            this.redoStack.length = 0;
+        }
+    }
+    //Pop the most recent state. Use the specified callback method.
+    undo(callback) {
+        if (this.stateStack.length > 0)
+            this.applyState(this.redoStack, this.stateStack.pop(), callback);
+    }
+    //Pop the most recent redo state. Use the specified callback method.
+    redo(callback) {
+        if (this.redoStack.length > 0)
+            this.applyState(this.stateStack, this.redoStack.pop(), callback);
+    }
+    //Root function for both undo and redo; operates on the passed-in stack
+    applyState(stack, newState, callBack) {
+        //Push the current state
+        stack.push(this.currentState);
+        //Make the new state the current state
+        this.currentState = newState;
+        //Lock the stacks for the incoming change
+        const thisStateManager = this;
+        this.locked = true;
+        //Update canvas with the new current state
+        this.canvas.loadFromJSON(this.currentState, function () {
+            if (callBack !== undefined)
+                callBack();
+            //Unlock the stacks
+            thisStateManager.locked = false;
+        });
     }
 }
 class LineDrawer {
@@ -531,6 +608,37 @@ class ColorChooserComponent {
         return values;
     }
 }
+class DeleteComponent extends ControlComponent {
+    constructor(target, parent) {
+        super(target, "fa fa-trash-o", //CSS class for icons
+        "Delete Selected Item", //Tooltip text
+        parent, {
+            //The component invokes a method on DrawingEditor to delete selected objects.
+            'click': () => { parent.deleteSelected(); }
+        });
+    }
+    //Render a button with a trash can icon
+    render() {
+        const html = `<button id="${this.target.replace('#', '')}" title="${this.hoverText}" disabled class="btn btn-danger">
+                        <i class="${this.cssClass}"></i>
+                     </button>`;
+        $(this.target).replaceWith(html);
+    }
+    //Enable the button
+    enable() {
+        var ele = document.getElementById(this.target.replace('#', ''));
+        Object.assign(ele, {
+            disabled: false
+        });
+    }
+    //Disable the button
+    disable() {
+        var ele = document.getElementById(this.target.replace('#', ''));
+        Object.assign(ele, {
+            disabled: true
+        });
+    }
+}
 class LineDisplayComponent extends DisplayComponent {
     constructor(target, parent) {
         const options = new DisplayComponentOptions();
@@ -658,6 +766,22 @@ class PolylineDisplayComponent extends DisplayComponent {
         super(5 /* Polyline */, target, parent, options);
     }
 }
+class RedoComponent extends ControlComponent {
+    constructor(target, parent) {
+        super(target, //Selector
+        "fa fa-repeat", //Icon CSS Classes
+        "Redo", //Tooltip
+        parent, {
+            'click': () => { parent.redo(); }
+        });
+    }
+    render() {
+        const html = `<button id="${this.target.replace('#', '')}" title="${this.hoverText}" class="btn btn-info">
+                        <i class="${this.cssClass}"></i>
+                     </button>`;
+        $(this.target).replaceWith(html);
+    }
+}
 class TriangleDisplayComponent extends DisplayComponent {
     constructor(target, parent) {
         const options = new DisplayComponentOptions();
@@ -702,34 +826,19 @@ class TextDisplayComponent extends DisplayComponent {
         }
     }
 }
-class DeleteComponent extends ControlComponent {
+class UndoComponent extends ControlComponent {
     constructor(target, parent) {
-        super(target, "fa fa-trash-o", //CSS class for icons
-        "Delete Selected Item", //Tooltip text
+        super(target, //Selector
+        "fa fa-undo", //Icon CSS Classes
+        "Undo", //Tooltip
         parent, {
-            //The component invokes a method on DrawingEditor to delete selected objects.
-            'click': () => { parent.deleteSelected(); }
+            'click': () => { parent.undo(); }
         });
     }
-    //Render a button with a trash can icon
     render() {
-        const html = `<button id="${this.target.replace('#', '')}" title="${this.hoverText}" disabled class="btn btn-danger">
+        const html = `<button id="${this.target.replace('#', '')}" title="${this.hoverText}" class="btn btn-info">
                         <i class="${this.cssClass}"></i>
                      </button>`;
         $(this.target).replaceWith(html);
-    }
-    //Enable the button
-    enable() {
-        var ele = document.getElementById(this.target.replace('#', ''));
-        Object.assign(ele, {
-            disabled: false
-        });
-    }
-    //Disable the button
-    disable() {
-        var ele = document.getElementById(this.target.replace('#', ''));
-        Object.assign(ele, {
-            disabled: true
-        });
     }
 }

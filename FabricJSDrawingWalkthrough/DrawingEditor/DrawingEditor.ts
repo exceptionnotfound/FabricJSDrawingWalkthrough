@@ -4,6 +4,7 @@
 
 class DrawingEditor {
     canvas: fabric.Canvas;
+    stateManager: StateManager;
 
     private components: DisplayComponent[];
     private cursorMode: CursorMode;
@@ -41,6 +42,8 @@ class DrawingEditor {
         };
 
         this.isDown = false;
+
+        this.stateManager = new StateManager(this.canvas);
 
         this.initializeCanvasEvents();
     }
@@ -81,6 +84,11 @@ class DrawingEditor {
 
         this.canvas.on('mouse:up', (o) => {
             this.isDown = false;
+            switch (this.cursorMode) {
+                case CursorMode.Draw:
+                    this.isObjectSelected = false;
+                    this.saveState();
+            }
         });
 
         this.canvas.on('object:selected', (o) => {
@@ -99,6 +107,10 @@ class DrawingEditor {
             }
 
             this.cursorMode = CursorMode.Draw;
+        });
+
+        this.canvas.on("object:modified", (e) => {
+            this.saveState();
         });
     }
 
@@ -179,6 +191,12 @@ class DrawingEditor {
             case 'lineThickness':
                 this.components[component] = [new LineThicknessComponent(target, this)];
                 break;
+            case 'undo':
+                this.components[component] = [new UndoComponent(target, this)];
+                break;
+            case 'redo':
+                this.components[component] = [new RedoComponent(target, this)];
+                break;
         }
     }
 
@@ -200,10 +218,10 @@ class DrawingEditor {
     }
 
     deleteSelected(): void {
-        const obj = this.canvas.getActiveObject();
-
         this.canvas.remove(this.canvas.getActiveObject());
         this.canvas.renderAll();
+
+        this.saveState();
     }
 
     setFillColor(color: string): void {
@@ -216,5 +234,18 @@ class DrawingEditor {
 
     setStrokeWidth(strokeWidth: number): void {
         this.drawerOptions.strokeWidth = strokeWidth;
+    }
+
+    undo(): void {
+        this.stateManager.undo();
+    }
+
+    redo(): void {
+        this.stateManager.redo();
+    }
+
+    private saveState() {
+        this.stateManager.saveState();
+        this.canvas.renderAll();
     }
 }
