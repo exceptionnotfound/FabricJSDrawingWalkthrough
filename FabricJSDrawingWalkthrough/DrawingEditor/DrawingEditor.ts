@@ -7,6 +7,7 @@ class DrawingEditor {
     stateManager: StateManager;
 
     private components: DisplayComponent[];
+    private copier: Copier;
     private cursorMode: CursorMode;
     private _drawer: IObjectDrawer;
     readonly drawerOptions: fabric.IObjectOptions;
@@ -14,6 +15,14 @@ class DrawingEditor {
     private isDown: boolean;
     private isObjectSelected: boolean = false;
     private object: fabric.Object;
+
+    private keyCodes = {
+        'C': 67,
+        'V': 86,
+        'X': 88,
+        'Y': 89,
+        'Z': 90
+    }
 
     constructor(private readonly selector: string,
         canvasHeight: number, canvasWidth: number) {
@@ -41,10 +50,13 @@ class DrawingEditor {
             strokeUniform: true
         };
 
+        this.copier = new Copier(this);
+
         this.isDown = false;
 
         this.stateManager = new StateManager(this.canvas);
 
+        this.initializeEvents();
         this.initializeCanvasEvents();
     }
 
@@ -248,4 +260,34 @@ class DrawingEditor {
         this.stateManager.saveState();
         this.canvas.renderAll();
     }
+
+    private initializeEvents() {
+        window.addEventListener('keydown', (event: KeyboardEvent) => {
+            //process Ctrl Commands
+            if (event.ctrlKey) {
+                switch (event.keyCode) {
+                    case this.keyCodes['Z']:
+                        this.undo();
+                        break;
+                    case this.keyCodes['Y']:
+                        this.redo();
+                        break;
+                    case this.keyCodes['C']:
+                        this.copier.copy();
+                        break;
+                    case this.keyCodes['X']:
+                        this.copier.cut();
+                        break;
+                    case this.keyCodes['V']:
+                        this.copier.paste();
+                        break;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        });
+
+    };
 }

@@ -7,6 +7,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+class Copier {
+    constructor(editor) {
+        this.editor = editor;
+    }
+    copy(callBack) {
+        const activeObject = this.editor.canvas.getActiveObject();
+        if (activeObject !== null) {
+            activeObject.clone((object) => {
+                this.memorizedObject = object;
+                object.set({
+                    left: object.left + 10,
+                    top: object.top + 10
+                });
+                if (callBack !== undefined)
+                    callBack();
+            });
+        }
+    }
+    cut() {
+        this.copy(() => this.editor.deleteSelected());
+    }
+    paste() {
+        if (this.memorizedObject !== undefined) {
+            this.memorizedObject.clone((clonedObject) => {
+                this.editor.canvas.add(clonedObject);
+                this.editor.canvas.setActiveObject(clonedObject);
+                this.editor.stateManager.saveState();
+                this.editor.canvas.renderAll();
+            });
+        }
+    }
+}
 //The below code (and all of DrawingEditor) was originally developed 
 //by my teammate Christopher Jestice (https://www.linkedin.com/in/christopher-jestice)
 //Refinements are by me, Matthew Jones (https://exceptionnotfound.net).
@@ -14,6 +46,13 @@ class DrawingEditor {
     constructor(selector, canvasHeight, canvasWidth) {
         this.selector = selector;
         this.isObjectSelected = false;
+        this.keyCodes = {
+            'C': 67,
+            'V': 86,
+            'X': 88,
+            'Y': 89,
+            'Z': 90
+        };
         $(`#${selector}`).replaceWith(`<canvas id="${selector}" height=${canvasHeight} width=${canvasWidth}> </canvas>`);
         this.cursorMode = 0 /* Draw */;
         this.canvas = new fabric.Canvas(`${selector}`, { selection: false });
@@ -33,8 +72,10 @@ class DrawingEditor {
             selectable: true,
             strokeUniform: true
         };
+        this.copier = new Copier(this);
         this.isDown = false;
         this.stateManager = new StateManager(this.canvas);
+        this.initializeEvents();
         this.initializeCanvasEvents();
     }
     //Properties
@@ -213,6 +254,34 @@ class DrawingEditor {
         this.stateManager.saveState();
         this.canvas.renderAll();
     }
+    initializeEvents() {
+        window.addEventListener('keydown', (event) => {
+            //process Ctrl Commands
+            if (event.ctrlKey) {
+                switch (event.keyCode) {
+                    case this.keyCodes['Z']:
+                        this.undo();
+                        break;
+                    case this.keyCodes['Y']:
+                        this.redo();
+                        break;
+                    case this.keyCodes['C']:
+                        this.copier.copy();
+                        break;
+                    case this.keyCodes['X']:
+                        this.copier.cut();
+                        break;
+                    case this.keyCodes['V']:
+                        this.copier.paste();
+                        break;
+                }
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        });
+    }
+    ;
 }
 class StateManager {
     constructor(canvas) {

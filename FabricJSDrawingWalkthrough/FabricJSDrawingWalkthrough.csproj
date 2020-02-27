@@ -34,6 +34,7 @@
     <None Remove="DrawingEditor\Components\Tools\TextDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\TriangleDisplayComponent.ts" />
     <None Remove="DrawingEditor\Components\Tools\UndoComponent.ts" />
+    <None Remove="DrawingEditor\Copier.ts" />
     <None Remove="DrawingEditor\Drawers\OvalDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\PolylineDrawer.ts" />
     <None Remove="DrawingEditor\Drawers\RectangleDrawer.ts" />
