@@ -11,6 +11,10 @@
         <div class="btn-group mr-2" role="group">
             <div id="undoComponent"></div>
             <div id="redoComponent"></div>
+            <button onclick="saveDrawing(event); return false;" title="Save" class="btn btn-success">
+                <i class="fa fa-save d-inline"></i>
+                <span>Save</span>
+            </button>
             <div id="deleteComponent"></div>
         </div>
     </div>
@@ -65,12 +69,14 @@
     <script src="~/js/drawingEditor.js" asp-append-version="true"></script>
     <script>
         var editor;
+        var savingLocked = false;
+        const savingMessage = '<div id="Saving"><i class="fa fa-spin fa-cog "></i>Saving...</div>';
         $(function () {
             //Calculate canvas height as a function of the window size.
             var canvasHeight = (window.innerHeight - $('#canvas').offset().top) * .9;
             var canvasWidth = $('#canvas').width();
 
-            //Instantiate our new drawer
+            //Instantiate our new editor
             //The canvas is created inside this constructor, using the selector passed.
             editor = new DrawingEditor('canvas', canvasHeight, canvasWidth);
 
@@ -101,6 +107,45 @@
                     editor.deleteSelected();
                 }
             });
+
+            editor.saveFunc = saveDrawing();
         });
+
+        function saveDrawing() {
+            if (!savingLocked) {
+                showSaving();
+                const drawing = {
+                    DrawingContent: JSON.stringify(editor.getJson()),
+                };
+
+                $.ajax({
+                    type: "POST",
+                    data: drawing,
+                    async: true,
+                    url: '?handler=Save'
+                }).done(function (data) {
+                    hideSaving();
+                }).fail(function () {
+                    hideSaving();
+                    alert('We are unable to save changes at this time.');
+                });
+            }
+        }
+
+        function showSaving() {
+            message = savingMessage;
+            $('#StatusBar').html(message);
+            savingLocked = true;
+            setTimeout(function () { savingLocked = false; }, 1000);
+        }
+
+        function hideSaving() {
+            if (savingLocked)
+                setTimeout(() => hideSaving(), 100);
+            else {
+                $('#Saving').remove();
+                message = '';
+            }
+        }
     </script>
 }

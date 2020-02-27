@@ -75,7 +75,7 @@ class DrawingEditor {
         this.copier = new Copier(this);
         this.isDown = false;
         this.stateManager = new StateManager(this.canvas);
-        this.initializeEvents();
+        this.initializeKeyCodeEvents();
         this.initializeCanvasEvents();
     }
     //Properties
@@ -254,7 +254,7 @@ class DrawingEditor {
         this.stateManager.saveState();
         this.canvas.renderAll();
     }
-    initializeEvents() {
+    initializeKeyCodeEvents() {
         window.addEventListener('keydown', (event) => {
             //process Ctrl Commands
             if (event.ctrlKey) {
@@ -282,6 +282,16 @@ class DrawingEditor {
         });
     }
     ;
+    setSaveFunc(saveFunction) {
+        this.saveFunc = saveFunction;
+    }
+    save() {
+        this.saveFunc();
+    }
+    getJson() {
+        const outP = this.canvas.toJSON();
+        return outP;
+    }
 }
 class StateManager {
     constructor(canvas) {

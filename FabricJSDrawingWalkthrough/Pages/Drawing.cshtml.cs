@@ -9,9 +9,18 @@ namespace FabricJSDrawingWalkthrough
 {
     public class DrawingModel : PageModel
     {
+        [BindProperty]
+        public string DrawingContent { get; set; }
+
         public void OnGet()
         {
 
+        }
+
+        public IActionResult OnPostSave()
+        {
+            var drawingJson = DrawingContent;
+            return new JsonResult(new { Valid = true });
         }
     }
 }

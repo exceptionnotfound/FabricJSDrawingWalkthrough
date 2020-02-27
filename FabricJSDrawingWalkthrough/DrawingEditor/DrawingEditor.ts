@@ -15,6 +15,7 @@ class DrawingEditor {
     private isDown: boolean;
     private isObjectSelected: boolean = false;
     private object: fabric.Object;
+    private saveFunc: Function;
 
     private keyCodes = {
         'C': 67,
@@ -56,7 +57,7 @@ class DrawingEditor {
 
         this.stateManager = new StateManager(this.canvas);
 
-        this.initializeEvents();
+        this.initializeKeyCodeEvents();
         this.initializeCanvasEvents();
     }
 
@@ -261,7 +262,7 @@ class DrawingEditor {
         this.canvas.renderAll();
     }
 
-    private initializeEvents() {
+    private initializeKeyCodeEvents() {
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             //process Ctrl Commands
             if (event.ctrlKey) {
@@ -288,6 +289,18 @@ class DrawingEditor {
                 return false;
             }
         });
-
     };
+
+    setSaveFunc(saveFunction: Function) {
+        this.saveFunc = saveFunction;
+    }
+
+    save() {
+        this.saveFunc();
+    }
+
+    getJson(): string {
+        const outP = this.canvas.toJSON();
+        return outP;
+    }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,9 @@ namespace FabricJSDrawingWalkthrough
                     .AddRazorPagesOptions(options =>
                     {
                         options.Conventions.AddPageRoute("/Drawing", "");
+                        //DO NOT DO THIS IN PRODUCTION APPLICATIONS!
+                        //This will cause your system to completely ignore antiforgery tokens.
+                        options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
                     });
         }
 
