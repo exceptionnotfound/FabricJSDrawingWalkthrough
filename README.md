@@ -6,7 +6,7 @@ This repository is part of a series on building a drawing tool with FabricJS and
 3. [Basic Shapes](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-3-basic-shapes/)
 4. [Text and Freeform Lines](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-4-text-and-freeform-lines/)
 5. [Deleting Objects](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-5-deleting-objects/)
-6. Colors and Styles
+6. [Colors and Styles](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-6-colors-and-styles/)
 7. Undo/Redo
 8. Cut/Copy/Paste and Hotkeys
 9. Saving and Conclusion
