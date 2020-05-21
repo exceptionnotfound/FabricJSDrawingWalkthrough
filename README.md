@@ -9,6 +9,6 @@ This repository is part of a series on building a drawing tool with FabricJS and
 6. [Colors and Styles](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-6-colors-and-styles/)
 7. [Undo/Redo](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-7-undo-redo/)
 8. [Cut/Copy/Paste and Hotkeys](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-8-cut-copy-paste-and-hotkeys/)
-9. Saving and Conclusion
+9. [Saving and Conclusion](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-9-saving-and-conclusion/)
 
-This series is being published right now. Posts are available to [paid members only](https://exceptionnotfound.net/signup/) for two weeks after publication date, and then they go free to the public.
+Please read and subscribe!
