@@ -11,4 +11,4 @@ This repository is part of a series on building a drawing tool with FabricJS and
 8. [Cut/Copy/Paste and Hotkeys](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-8-cut-copy-paste-and-hotkeys/)
 9. [Saving and Conclusion](https://exceptionnotfound.net/drawing-with-fabricjs-and-typescript-part-9-saving-and-conclusion/)
 
-Please read and subscribe!
+Please read and [subscribe](https://exceptionnotfound.net/signup/)!
